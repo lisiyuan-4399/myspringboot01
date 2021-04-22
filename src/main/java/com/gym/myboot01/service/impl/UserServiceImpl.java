@@ -5,16 +5,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gym.myboot01.mapper.AdminMapper;
 import com.gym.myboot01.mapper.CoachMapper;
 import com.gym.myboot01.mapper.UserMapper;
-import com.gym.myboot01.pojo.Admin;
-import com.gym.myboot01.pojo.Coach;
-import com.gym.myboot01.pojo.JsonResult;
-import com.gym.myboot01.pojo.User;
+import com.gym.myboot01.pojo.*;
 import com.gym.myboot01.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.transport.ObjectTable;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 
 @Service
@@ -29,13 +26,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
 
 
     @Override
-    public JsonResult toLogin(String getType, User user, HttpSession session) {
+    public JsonResult toLogin(String getType, User user) {
 
         Object obj = null ;
         String sessionStr = getType ;
         JsonResult jsonResult = new JsonResult() ;
         String msg = "";
-
+        Map<String,Object> map = new HashMap<>();
 
         if("user".equals(getType)){
             obj = userMapper.selectOne(getQueryWrapper(user));
@@ -45,8 +42,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
             obj = adminMapper.selectOne(getQueryWrapper(user));
         }
         if(obj != null){
-            //登录成功
-            session.setAttribute(sessionStr,obj);
+
+            //生成 token 并返回给前端
+            String token = UUID.randomUUID()+"";
+
+            MyToken.token.put(token,obj) ;
+
+            map.put("user",obj);
+            map.put("token",token) ;
+            jsonResult.setData(map);
+            System.out.println("token:"+MyToken.token);
             msg = "登录成功~!~" ;
         }else{
             //登录失败
@@ -55,6 +60,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
         jsonResult.setMsg(msg);
         return jsonResult ;
+    }
+
+    @Override
+    public JsonResult getUserInfo(HttpServletRequest request) {
+        JsonResult jsonResult = new JsonResult() ;
+        String token = request.getHeader("token");
+        //根据 token 获取用户信息
+        Object o = MyToken.token.get(token);
+        jsonResult.setData(o);
+        jsonResult.setMsg("获取用户信息成功");
+        return jsonResult;
     }
 
     private QueryWrapper getQueryWrapper(User user){

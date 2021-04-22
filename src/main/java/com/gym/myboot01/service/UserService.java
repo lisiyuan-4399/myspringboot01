@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gym.myboot01.pojo.JsonResult;
 import com.gym.myboot01.pojo.User;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 
 public interface UserService extends IService<User> {
 
+    // 登录方法
+    JsonResult toLogin(String getType, User user);
 
-    JsonResult toLogin(String getType, User user , HttpSession session);
+    //获取用户信息
+    JsonResult getUserInfo(HttpServletRequest request) ;
 }
