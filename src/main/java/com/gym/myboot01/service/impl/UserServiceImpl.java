@@ -73,6 +73,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         return jsonResult;
     }
 
+    @Override
+    public JsonResult addUser(User user) {
+        JsonResult jsonResult = new JsonResult() ;
+        QueryWrapper queryWrapper = new QueryWrapper() ;
+        queryWrapper.eq("username",user.getUsername()) ;
+        User one = userMapper.selectOne(queryWrapper);
+        if(one != null){
+            jsonResult.setMsg("用户已存在");
+            jsonResult.setCode("1");
+            return jsonResult ;
+        }else{
+            //用户不存在 ，进行添加操作
+            userMapper.insert(user);
+            jsonResult.setMsg("添加成功");
+            jsonResult.setData(user);
+            return jsonResult ;
+        }
+    }
+
     private QueryWrapper getQueryWrapper(User user){
         QueryWrapper queryWrapper = new QueryWrapper() ;
         queryWrapper.eq("username",user.getUsername()) ;

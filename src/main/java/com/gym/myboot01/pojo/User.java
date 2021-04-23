@@ -39,5 +39,5 @@ public class User {
     private String phone ;
 
     @TableField(value = "is_delete")
-    private String is_delete ;
+    private Integer is_delete ;
 }

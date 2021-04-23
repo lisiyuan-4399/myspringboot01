@@ -15,4 +15,7 @@ public interface UserService extends IService<User> {
 
     //获取用户信息
     JsonResult getUserInfo(HttpServletRequest request) ;
+
+    //添加用户信息
+    JsonResult addUser(User user);
 }

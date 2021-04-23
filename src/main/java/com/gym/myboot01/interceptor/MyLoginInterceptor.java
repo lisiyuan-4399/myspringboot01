@@ -27,7 +27,6 @@ public class MyLoginInterceptor extends HandlerInterceptorAdapter {
             return true;
         }else{
             System.out.println("token 验证失败");
-            response.sendRedirect("http://127.0.0.1:8080/login");
             return false;
         }
 
