@@ -71,4 +71,29 @@ public class CoachServiceImpl extends ServiceImpl<CoachMapper,Coach> implements 
 
         return "0".equals(i.getCode()) ? 1 : 0 ;
     }
+
+    @Override
+    public Integer updateUploadPath(MultipartFile file, Coach coach) throws IOException {
+        //保存数据库的路径
+        String sqlPath = null;
+        //定义 文件名
+        String filename=null;
+        if(!file.isEmpty()){
+            //生成uuid作为文件名称
+            String uuid = UUID.randomUUID().toString().replaceAll("-","");
+            //获得文件类型（可以判断如果不是图片，禁止上传）
+            String contentType=file.getContentType(); //image/jpeg
+            //获得文件后缀名
+            String suffixName=contentType.substring(contentType.indexOf("/")+1); //jpeg
+            // 得到 文件名
+            filename=uuid+"."+suffixName;
+            // 文件保存路径(保存文件路径)
+            file.transferTo(new File(localPath+filename));
+            //把图片的相对路径保存至数据库
+            sqlPath = "/images/"+filename;
+            coach.setPic(sqlPath);
+        }
+        int i = coachMapper.updateById(coach);
+        return i;
+    }
 }

@@ -83,4 +83,20 @@ public class CoachController {
         }
         return jsonResult ;
     }
+
+    @RequestMapping( value = "/updateUploadPath",method = RequestMethod.POST,consumes = "multipart/form-data")
+    public JsonResult updateUploadPath(MultipartFile file,Coach coach) throws IOException {
+        System.out.println(file);
+        System.out.println(coach.toString());
+        JsonResult jsonResult = new JsonResult() ;
+        Integer i = coachService.updateUploadPath(file,coach) ;
+        if(i>0){
+            jsonResult.setMsg("修改教练成功");
+        }else {
+            jsonResult.setMsg("修改教练失败");
+            jsonResult.setCode("1");
+        }
+        return jsonResult;
+    }
+
 }

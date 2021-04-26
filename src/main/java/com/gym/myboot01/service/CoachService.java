@@ -12,4 +12,6 @@ public interface CoachService extends IService<Coach> {
     JsonResult addUser(Coach coach);
 
     Integer uploadPath(MultipartFile file, Coach coach) throws IOException;
+
+    Integer updateUploadPath(MultipartFile file, Coach coach) throws IOException;
 }
