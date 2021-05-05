@@ -99,4 +99,17 @@ public class CoachController {
         return jsonResult;
     }
 
+    @RequestMapping("/getCoachAllByConditions")
+    public JsonResult getCoachAllByConditions(){
+        JsonResult<List<Coach>> jsonResult = new JsonResult<>() ;
+        QueryWrapper queryWrapper = new QueryWrapper() ;
+        queryWrapper.eq("is_delete",0) ;
+        queryWrapper.eq("is_inuse",0) ;
+        queryWrapper.select("id","name","age","num","sex","phone","email","description","pic");
+        List<Coach> list = coachService.list(queryWrapper);
+        jsonResult.setData(list);
+        jsonResult.setMsg("查询全部教练成功");
+        return jsonResult ;
+    }
+
 }

@@ -1,12 +1,10 @@
 package com.gym.myboot01.service.impl;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gym.myboot01.mapper.CoachMapper;
-import com.gym.myboot01.pojo.Coach;
-import com.gym.myboot01.pojo.JsonResult;
-import com.gym.myboot01.service.CoachService;
+import com.gym.myboot01.mapper.EquipmentMapper;
+import com.gym.myboot01.pojo.Equipment;
+import com.gym.myboot01.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,39 +12,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 
 
 @Service
-public class CoachServiceImpl extends ServiceImpl<CoachMapper,Coach> implements CoachService {
+public class EquipmentServiceImpl extends ServiceImpl<EquipmentMapper,Equipment> implements EquipmentService {
 
-    @Autowired
-    private CoachMapper coachMapper;
 
-    @Value("${photo.coach}")
+    @Value("${photo.equipment}")
     private String localPath ;
 
-    @Override
-    public JsonResult addUser(Coach coach) {
-        JsonResult jsonResult = new JsonResult() ;
-        QueryWrapper queryWrapper = new QueryWrapper() ;
-        queryWrapper.eq("username",coach.getUsername()) ;
-        Coach one = coachMapper.selectOne(queryWrapper);
-        if(one != null){
-            jsonResult.setMsg("该教练已存在");
-            jsonResult.setCode("1");
-            return jsonResult ;
-        }else{
-            //用户不存在 ，进行添加操作
-            coachMapper.insert(coach);
-            jsonResult.setMsg("添加成功");
-            jsonResult.setData(coach);
-            return jsonResult ;
-        }
-    }
+    @Autowired
+    private EquipmentMapper equipmentMapper ;
 
     @Override
-    public Integer uploadPath(MultipartFile file, Coach coach) throws IOException {
+    public Integer uploadPath(MultipartFile file, Equipment equipment) throws IOException {
         //保存数据库的路径
         String sqlPath = null;
         //定义 文件名
@@ -64,15 +45,16 @@ public class CoachServiceImpl extends ServiceImpl<CoachMapper,Coach> implements 
             file.transferTo(new File(localPath+filename));
             //把图片的相对路径保存至数据库
             sqlPath = "/images/"+filename;
-            coach.setPic(sqlPath);
+            equipment.setPic(sqlPath);
         }
-        JsonResult i = this.addUser(coach) ;
+        equipment.setBeginTime(new Date());
+        int insert = equipmentMapper.insert(equipment);
 
-        return "0".equals(i.getCode()) ? 1 : 0 ;
+        return insert;
     }
 
     @Override
-    public Integer updateUploadPath(MultipartFile file, Coach coach) throws IOException {
+    public Integer updateUploadPath(MultipartFile file, Equipment equipment) throws IOException {
         //保存数据库的路径
         String sqlPath = null;
         //定义 文件名
@@ -90,9 +72,9 @@ public class CoachServiceImpl extends ServiceImpl<CoachMapper,Coach> implements 
             file.transferTo(new File(localPath+filename));
             //把图片的相对路径保存至数据库
             sqlPath = "/images/"+filename;
-            coach.setPic(sqlPath);
+            equipment.setPic(sqlPath);
         }
-        int i = coachMapper.updateById(coach);
+        int i = equipmentMapper.updateById(equipment);
         return i;
     }
 }

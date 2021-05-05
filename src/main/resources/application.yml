@@ -37,4 +37,5 @@ mybatis-plus:
 
 #存放 coach 照片的地方
 photo:
-  dir: D:\idea-workspace\myboot01\src\main\resources\static\photo\Coach\
+  coach: D:\idea-workspace\myboot01\src\main\resources\static\photo\Coach\
+  equipment: D:\idea-workspace\myboot01\src\main\resources\static\photo\Equipmment\
