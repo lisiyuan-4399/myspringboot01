@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gym.myboot01.mapper.AdminMapper;
 import com.gym.myboot01.mapper.CoachMapper;
 import com.gym.myboot01.mapper.UserMapper;
+import com.gym.myboot01.mapper.UserMessageMapper;
 import com.gym.myboot01.pojo.*;
 import com.gym.myboot01.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
     private CoachMapper coachMapper ;
     @Autowired
     private AdminMapper adminMapper ;
+    @Autowired
+    private UserMessageMapper userMessageMapper ;
 
 
     @Override
@@ -92,10 +95,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements Use
         }
     }
 
+    //修改个人信息
+    @Override
+    public int updatePersonalDetails(PersonalDetailsVO detailsVO) {
+        //判断是否修改 user 表中的信(全部都改不就完了)
+        User user = new User() ;
+        user.setId(detailsVO.getUid());
+        user.setName(detailsVO.getName());
+        user.setSex(detailsVO.getSex());
+        user.setPhone(detailsVO.getPhone());
+        user.setEmail(detailsVO.getEmail());
+        int i = userMapper.updateById(user);
+        UserMessage userMessage = new UserMessage() ;
+        userMessage.setId(detailsVO.getId());
+        userMessage.setAddress(detailsVO.getAddress());
+        userMessage.setBirthday(detailsVO.getBirthday());
+        userMessage.setHeight(detailsVO.getHeight());
+        userMessage.setDescription(detailsVO.getDescription());
+        userMessage.setQQ(detailsVO.getQQ());
+        int i1 = userMessageMapper.updateById(userMessage);
+        return (i>0 && i1>0) ? 1:0;
+    }
+
+    //获取个人 Message
+    @Override
+    public PersonalDetailsVO getMyMessage(Integer id) {
+
+        return  userMessageMapper.getMyMessage(id) ;
+    }
+
     private QueryWrapper getQueryWrapper(User user){
         QueryWrapper queryWrapper = new QueryWrapper() ;
         queryWrapper.eq("username",user.getUsername()) ;
         queryWrapper.eq("password",user.getPassword()) ;
         return queryWrapper ;
+    }
+
+    private Boolean detailsExistUser(PersonalDetailsVO detailsVO){
+        return (detailsVO.getName() != null || detailsVO.getSex()!=null || detailsVO.getEmail()!=null || detailsVO.getPhone()!=null);
     }
 }
