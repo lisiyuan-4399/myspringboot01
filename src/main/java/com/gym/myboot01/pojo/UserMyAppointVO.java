@@ -24,6 +24,8 @@ public class UserMyAppointVO {
 
     private String phone ;
 
+    private Integer type ;
+
     private Date beginTime ;
 
     private Date endTime ;

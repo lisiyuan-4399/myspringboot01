@@ -38,6 +38,9 @@ public class Coach {
     @TableField(value = "phone")
     private String phone ;
 
+    @TableField(value = "type")
+    private Integer type ;
+
     @TableField(value = "age")
     private Integer age ;
 

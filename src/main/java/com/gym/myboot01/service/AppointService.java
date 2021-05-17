@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AppointService extends IService<Appoint> {
 
-    Boolean addAppointByUser(Integer userId, Integer coachId);
+    Boolean addAppointByUser(Integer userId, Integer coachId,Integer sex , Integer type);
 
     List<UserMyAppointVO> getAppointAll(Integer userId);
 
@@ -18,4 +18,6 @@ public interface AppointService extends IService<Appoint> {
 
     //根据 id 完成预约
     void completeAppoit(Integer id);
+
+    Boolean addAutoAppoint(Integer userId);
 }

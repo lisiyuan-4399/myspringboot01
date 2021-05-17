@@ -1,7 +1,6 @@
 package com.gym.myboot01.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gym.myboot01.pojo.Appoint;
 import com.gym.myboot01.pojo.JsonResult;
 import com.gym.myboot01.pojo.UserMyAppointVO;
@@ -20,16 +19,33 @@ public class AppointController {
     @Autowired
     private AppointService appointService ;
 
-    // 用户进行预约
+    // 用户进行预约(个性化预约)
     @RequestMapping("/addAppointByUser")
-    public JsonResult addAppointByUser(@RequestParam("userId") Integer userId,@RequestParam("coachId")Integer coachId){
+    public JsonResult addAppointByUser(@RequestParam("userId") Integer userId,
+                                       @RequestParam(name = "coachId",required = false)Integer coachId,
+                                       @RequestParam(name = "sex",required = false) Integer sex,
+                                       @RequestParam(name = "type",required = false) Integer type){
         JsonResult jsonResult = new JsonResult() ;
-        Boolean b = appointService.addAppointByUser(userId,coachId) ;
+        Boolean b = appointService.addAppointByUser(userId,coachId,sex,type) ;
         if(b){
             jsonResult.setMsg("添加预约成功");
         }else{
             jsonResult.setCode("1");
-            jsonResult.setMsg("添加预约失败");
+            jsonResult.setMsg("添加预约失败(无匹配类型)");
+        }
+        return jsonResult ;
+    }
+
+    //用户进行一键预约
+    @RequestMapping("/autoAppoint/{userId}")
+    public JsonResult autoAppoint(@PathVariable("userId") Integer userId){
+        JsonResult jsonResult = new JsonResult() ;
+        Boolean b = appointService.addAutoAppoint(userId);
+        if(b){
+            jsonResult.setMsg("预约成功!");
+        }else{
+            jsonResult.setCode("1");
+            jsonResult.setMsg("暂无可预约教练!");
         }
         return jsonResult ;
     }

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.gym.myboot01.mapper.AppointMapper">
     <select id="getAppointAll" parameterType="int" resultType="com.gym.myboot01.pojo.UserMyAppointVO">
-        SELECT a.`id`,a.`begintime`,a.`endtime`,a.`evaluate`,a.`is_valid`,c.`name`,c.`age`,c.`sex`,c.`phone`
+        SELECT a.`id`,a.`begintime`,a.`endtime`,a.`evaluate`,a.`is_valid`,c.`name`,c.`age`,c.`sex`,c.`phone`,c.`type`
         FROM t_appoint a
         INNER JOIN t_coach c
         ON a.c_id=c.id
