@@ -1,10 +1,11 @@
 package com.gym.myboot01.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.gym.myboot01.pojo.Coach;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.myboot01.pojo.Equipment;
 import com.gym.myboot01.pojo.JsonResult;
+import com.gym.myboot01.pojo.MyPage;
 import com.gym.myboot01.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +20,20 @@ import java.util.List;
 @RequestMapping("/equipment")
 public class EquipmentController {
 
+
     @Autowired
     private EquipmentService equipmentService ;
+
+    @RequestMapping("/getEquipmentAllPage")
+    public JsonResult getEquipmentAllPage(@RequestBody MyPage page3){
+
+        System.out.println(page3);
+        JsonResult jsonResult = new JsonResult() ;
+        Page<Equipment> page = new Page(page3.getNum(),page3.getCurrentPage()) ;
+        IPage<Equipment> page1 = equipmentService.page(page);
+        jsonResult.setData(page1);
+        return jsonResult ;
+    }
 
     @RequestMapping("/getEquipmentAll")
     public JsonResult getEquipmentAll(){
@@ -104,4 +117,5 @@ public class EquipmentController {
         jsonResult.setMsg("获取器材图片成功");
         return jsonResult ;
     }
+
 }

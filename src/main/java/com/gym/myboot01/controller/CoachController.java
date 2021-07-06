@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -28,7 +31,7 @@ public class CoachController {
         queryWrapper.eq("is_delete",0) ;
         List<Coach> list = coachService.list(queryWrapper);
         jsonResult.setData(list);
-        jsonResult.setMsg("查询全部用户成功");
+        jsonResult.setMsg("查询全部教练成功");
         return jsonResult ;
     }
 
@@ -109,6 +112,26 @@ public class CoachController {
         List<Coach> list = coachService.list(queryWrapper);
         jsonResult.setData(list);
         jsonResult.setMsg("查询全部教练成功");
+        return jsonResult ;
+    }
+
+    //获取全部教练名称和预约次数
+    @RequestMapping("/getCoachAllNameAndNum")
+    public JsonResult getCoachAllNameAndNum(){
+
+        JsonResult jsonResult = new JsonResult() ;
+        List<Coach> list = coachService.list();
+        Map coachMap = new HashMap() ;
+        List nameList = new ArrayList() ;
+        List numList = new ArrayList() ;
+        if(list!=null){
+            for (int i=0 ; i<list.size() ; i++){
+                nameList.add(list.get(i).getName()) ;
+            }
+            coachMap.put("name",nameList) ;
+            coachMap.put("num",numList) ;
+        }
+        jsonResult.setData(coachMap);
         return jsonResult ;
     }
 
